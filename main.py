@@ -1,7 +1,7 @@
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
-
+from flask import Flask, render_template
 
 load_dotenv()
 
@@ -12,16 +12,14 @@ client = OpenAI(
 
 audio_file=open("audio.mp3", "rb")
 transcript = client.audio.transcriptions.create(
-  model="whisper-1", 
+  model="whisper-1",
   file=audio_file
 )
 
 print("Audio Transcription: ", transcript.text)
 
-# stream = client.chat.completions.create(
-#     model="gpt-4",
-#     messages=[{"role": "user", "content": "Say this is a test"}],
-#     stream=True,
-# )
-# for chunk in stream:
-#     print(chunk.choices[0].delta.content or "", end="")
+app = Flask(__name__)
+
+@app.route("/")
+def index():
+  return render_template("index.html")
